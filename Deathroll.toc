@@ -1,0 +1,10 @@
+## Interface: 11303
+## Title: Deathroll
+## Notes: Deathroll Helper
+## Author: Maxpain
+## Version: v1.0.0
+## DefaultState: Enabled
+## LoadOnDemand: 0
+## Globe: check-classic
+
+Deathroll.lua
