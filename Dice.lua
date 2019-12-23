@@ -3,8 +3,22 @@ local HANDLE = {
   last=5000
 }
 
+local function Dice_SetButtonsEnabled(enabled)
+  for k, button in pairs(HANDLE.buttons) do
+    if enabled then button:Enable() else button:Disable() end
+  end
+end
+
+local function Dice_TempDisableButtons(secs)
+  Dice_SetButtonsEnabled(false)
+  C_Timer.After(0.5, function()
+    Dice_SetButtonsEnabled(true)
+  end)
+end
+
 local function Dice_NextRoll()
   RandomRoll(1, HANDLE.last)
+  Dice_TempDisableButtons(1)
 end
 
 local function Dice_Restart()
@@ -71,6 +85,7 @@ local function Dice_Create(handle)
   rollBtn:SetScript('OnClick', Dice_NextRoll)
 
   handle.frame = frame
+  handle.buttons = {rollBtn, restartBtn}
 end
 
 Dice_Create(HANDLE)
