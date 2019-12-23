@@ -1,15 +1,19 @@
 
-local HANDLE = {}
+local HANDLE = {
+  last=5000
+}
 
-local function Dice_NewRoll()
-  -- TODO: use correct previous values
-  RandomRoll(0, 100)
+local function Dice_NextRoll()
+  RandomRoll(1, HANDLE.last)
+end
+
+local function Dice_Restart()
+  HANDLE.last = 5000
+  Dice_NextRoll()
 end
 
 local function Dice_CaptureRoll(name, roll, min, max)
-  local msg = string.format("%s rolls %d (%d-%d)", name, roll, min, max)
-  
-  print(msg)
+  HANDLE.last = roll
 end
 
 local function Dice_ParseChat(msg)
@@ -44,10 +48,15 @@ local function Dice_Create(handle)
   frame:SetScript("OnEvent", Dice_OnEvent)
   frame.Title:SetText("Dice")
 
-  local rollBtn = Dice_CreateButton("Roll", frame)
-  rollBtn:SetPoint("BOTTOMLEFT", 9, 10)
-  rollBtn:SetSize(60, 22)
-  rollBtn:SetScript('OnClick', Dice_NewRoll)
+  local restartBtn = Dice_CreateButton("Restart", frame)
+  restartBtn:SetPoint("BOTTOMLEFT", 10, 11)
+  restartBtn:SetSize(110, 22)
+  restartBtn:SetScript('OnClick', Dice_Restart)
+
+  local rollBtn = Dice_CreateButton("Next Roll", frame)
+  rollBtn:SetPoint("BOTTOMRIGHT", -8, 11)
+  rollBtn:SetSize(110, 22)
+  rollBtn:SetScript('OnClick', Dice_NextRoll)
 
   handle.frame = frame
 end
