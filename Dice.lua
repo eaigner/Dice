@@ -4,7 +4,7 @@ local HANDLE = {
 }
 
 local function Dice_SetButtonsEnabled(enabled)
-  for k, button in pairs(HANDLE.buttons) do
+  for k, button in pairs(HANDLE.Buttons) do
     if enabled then button:Enable() else button:Disable() end
   end
 end
@@ -16,8 +16,34 @@ local function Dice_TempDisableButtons(secs)
   end)
 end
 
+local function Dice_UpdateTable(rows)
+  local scrollFrame = HANDLE.Frame.ScrollFrame
+  local w = scrollFrame:GetWidth()
+  local top = -4
+  local rowHeight = 18
+
+  local child = CreateFrame("Frame", nil, scrollFrame)
+
+  for k, v in pairs(rows) do
+    local label = child:CreateFontString(nil, "OVERLAY", "GameFontNormal")
+    label:SetPoint("TOPLEFT", 4, top)
+    label:SetText(v .. ": " .. time())
+
+    top = top - rowHeight
+  end
+
+  local h = math.abs(top)
+
+  child:SetSize(w, math.abs(top))
+  scrollFrame:SetScrollChild(child)
+end
+
 local function Dice_NextRoll()
   RandomRoll(1, HANDLE.last)
+
+  -- TODO: rm
+  -- Dice_UpdateTable({"A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N", "O", "P", "Q", "R", "S", "T", "X", "Y", "Z"})
+
   Dice_TempDisableButtons(1)
 end
 
@@ -93,8 +119,8 @@ local function Dice_Create(handle)
   rollBtn:SetSize(116, 22)
   rollBtn:SetScript('OnClick', Dice_NextRoll)
 
-  handle.frame = frame
-  handle.buttons = {rollBtn, restartBtn}
+  handle.Frame = frame
+  handle.Buttons = {rollBtn, restartBtn}
 end
 
 Dice_Create(HANDLE)
