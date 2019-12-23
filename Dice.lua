@@ -43,10 +43,22 @@ local function Dice_Create(handle)
   local frame = CreateFrame("FRAME", "DiceFrame", UIParent, "UIPanelDialogTemplate")
   frame:SetSize(240, 300)
   frame:SetPoint("CENTER")
+
+  -- Dialog title
+  frame.Title:SetText("Dice")
+
+  -- Make frame draggable
+  frame:SetMovable(true)
+  frame:EnableMouse(true)
+  frame:RegisterForDrag("LeftButton")
+  frame:SetScript("OnDragStart", frame.StartMoving)
+  frame:SetScript("OnDragStop", frame.StopMovingOrSizing)
+
   -- frame:Hide()
+
+  -- Register for chat events
   frame:RegisterEvent("CHAT_MSG_SYSTEM")
   frame:SetScript("OnEvent", Dice_OnEvent)
-  frame.Title:SetText("Dice")
 
   local restartBtn = Dice_CreateButton("Restart", frame)
   restartBtn:SetPoint("BOTTOMLEFT", 10, 11)
