@@ -23,9 +23,15 @@ local function Dice_OnEvent(frame, event, arg1, ...)
 end
 
 local function Dice_Create(handle)
-  handle.frame = CreateFrame("FRAME")
-  handle.frame:RegisterEvent("CHAT_MSG_SYSTEM")
-  handle.frame:SetScript("OnEvent", Dice_OnEvent)
+  local frame = CreateFrame("FRAME", "DiceFrame", UIParent, "UIPanelDialogTemplate")
+  frame:SetSize(350, 400)
+  frame:SetPoint("CENTER")
+  frame:Hide()
+  frame:RegisterEvent("CHAT_MSG_SYSTEM")
+  frame:SetScript("OnEvent", Dice_OnEvent)
+  frame.Title:SetText("Dice")
+  
+  handle.frame = frame
 end
 
 Dice_Create(HANDLE)
