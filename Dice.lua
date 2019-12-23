@@ -1,7 +1,12 @@
 
 local HANDLE = {}
 
-local function Dice_NewRoll(name, roll, min, max)
+local function Dice_NewRoll()
+  -- TODO: use correct previous values
+  RandomRoll(0, 100)
+end
+
+local function Dice_CaptureRoll(name, roll, min, max)
   local msg = string.format("%s rolls %d (%d-%d)", name, roll, min, max)
   
   print(msg)
@@ -12,7 +17,7 @@ local function Dice_ParseChat(msg)
   local name, roll, min, max = msg:match(rx)
 
   if name then
-    Dice_NewRoll(name, roll, min, max)
+    Dice_CaptureRoll(name, roll, min, max)
   end
 end
 
@@ -42,7 +47,8 @@ local function Dice_Create(handle)
   local rollBtn = Dice_CreateButton("Roll", frame)
   rollBtn:SetPoint("BOTTOMLEFT", 9, 10)
   rollBtn:SetSize(60, 22)
-  
+  rollBtn:SetScript('OnClick', Dice_NewRoll)
+
   handle.frame = frame
 end
 
