@@ -1,5 +1,5 @@
 ## Interface: 11303
-## Title: Deathroll
+## Title: Dice
 ## Notes: Deathroll Helper
 ## Author: Maxpain
 ## Version: v1.0.0
@@ -7,4 +7,4 @@
 ## LoadOnDemand: 0
 ## Globe: check-classic
 
-Deathroll.lua
+Dice.lua

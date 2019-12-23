@@ -1,31 +1,31 @@
 
 local HANDLE = {}
 
-local function Deathroll_NewRoll(name, roll, min, max)
+local function Dice_NewRoll(name, roll, min, max)
   local msg = string.format("%s rolls %d (%d-%d)", name, roll, min, max)
   
   print(msg)
 end
 
-local function Deathroll_ParseChat(msg)
+local function Dice_ParseChat(msg)
   local rx = "^(.+) rolls (%d+) %((%d+)%-(%d+)%)$"
   local name, roll, min, max = msg:match(rx)
 
   if name then
-    Deathroll_NewRoll(name, roll, min, max)
+    Dice_NewRoll(name, roll, min, max)
   end
 end
 
-local function Deathroll_OnEvent(frame, event, arg1, ...)
+local function Dice_OnEvent(frame, event, arg1, ...)
   if event == "CHAT_MSG_SYSTEM" then
-    Deathroll_ParseChat(arg1)
+    Dice_ParseChat(arg1)
   end
 end
 
-local function Deathroll_Create(handle)
+local function Dice_Create(handle)
   handle.frame = CreateFrame("FRAME")
   handle.frame:RegisterEvent("CHAT_MSG_SYSTEM")
-  handle.frame:SetScript("OnEvent", Deathroll_OnEvent)
+  handle.frame:SetScript("OnEvent", Dice_OnEvent)
 end
 
-Deathroll_Create(HANDLE)
+Dice_Create(HANDLE)
