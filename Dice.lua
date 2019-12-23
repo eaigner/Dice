@@ -76,21 +76,21 @@ local function Dice_Create(handle)
 
   -- Scrollable Frame
   local scrollFrame = CreateFrame("ScrollFrame", nil, frame, "UIPanelScrollFrameTemplate")
-  scrollFrame:SetPoint("TOPLEFT", DiceFrameDialogBG, "TOPLEFT", 4, -8)
-  scrollFrame:SetPoint("BOTTOMRIGHT", DiceFrameDialogBG, "BOTTOMRIGHT", -26, 26)
+  scrollFrame:SetPoint("TOPLEFT", DiceFrameDialogBG, "TOPLEFT", 4, -4)
+  scrollFrame:SetPoint("BOTTOMRIGHT", DiceFrameDialogBG, "BOTTOMRIGHT", -22, 22)
   -- scrollFrame:SetClipsChildren(true)
 
   frame.ScrollFrame = scrollFrame
 
   -- Buttons
   local restartBtn = Dice_CreateButton("Restart", frame)
-  restartBtn:SetPoint("BOTTOMLEFT", 10, 11)
-  restartBtn:SetSize(110, 22)
+  restartBtn:SetPoint("BOTTOMLEFT", 8, 8)
+  restartBtn:SetSize(115, 22)
   restartBtn:SetScript('OnClick', Dice_Restart)
 
   local rollBtn = Dice_CreateButton("Next Roll", frame)
-  rollBtn:SetPoint("BOTTOMRIGHT", -8, 11)
-  rollBtn:SetSize(110, 22)
+  rollBtn:SetPoint("BOTTOMRIGHT", -4, 8)
+  rollBtn:SetSize(116, 22)
   rollBtn:SetScript('OnClick', Dice_NextRoll)
 
   handle.frame = frame
