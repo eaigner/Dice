@@ -22,14 +22,26 @@ local function Dice_OnEvent(frame, event, arg1, ...)
   end
 end
 
+local function Dice_CreateButton(text, parent)
+  local btn = CreateFrame("Button", nil, parent, "GameMenuButtonTemplate")
+  btn:SetText(text)
+  btn:SetNormalFontObject("GameFontNormal")
+  btn:SetHighlightFontObject("GameFontHighlight")
+  return btn
+end
+
 local function Dice_Create(handle)
   local frame = CreateFrame("FRAME", "DiceFrame", UIParent, "UIPanelDialogTemplate")
-  frame:SetSize(350, 400)
+  frame:SetSize(240, 300)
   frame:SetPoint("CENTER")
-  frame:Hide()
+  -- frame:Hide()
   frame:RegisterEvent("CHAT_MSG_SYSTEM")
   frame:SetScript("OnEvent", Dice_OnEvent)
   frame.Title:SetText("Dice")
+
+  local rollBtn = Dice_CreateButton("Roll", frame)
+  rollBtn:SetPoint("BOTTOMLEFT", 9, 10)
+  rollBtn:SetSize(60, 22)
   
   handle.frame = frame
 end
