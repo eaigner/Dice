@@ -74,6 +74,15 @@ local function Dice_Create(handle)
   frame:RegisterEvent("CHAT_MSG_SYSTEM")
   frame:SetScript("OnEvent", Dice_OnEvent)
 
+  -- Scrollable Frame
+  local scrollFrame = CreateFrame("ScrollFrame", nil, frame, "UIPanelScrollFrameTemplate")
+  scrollFrame:SetPoint("TOPLEFT", DiceFrameDialogBG, "TOPLEFT", 4, -8)
+  scrollFrame:SetPoint("BOTTOMRIGHT", DiceFrameDialogBG, "BOTTOMRIGHT", -26, 26)
+  -- scrollFrame:SetClipsChildren(true)
+
+  frame.ScrollFrame = scrollFrame
+
+  -- Buttons
   local restartBtn = Dice_CreateButton("Restart", frame)
   restartBtn:SetPoint("BOTTOMLEFT", 10, 11)
   restartBtn:SetSize(110, 22)
