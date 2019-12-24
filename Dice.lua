@@ -1,5 +1,7 @@
 
 
+SLASH_DICE1 = "/dice"
+
 local INITIAL_ROLL = 10000
 
 local HANDLE = {
@@ -191,8 +193,7 @@ local function Dice_Create(handle)
   frame:RegisterForDrag("LeftButton")
   frame:SetScript("OnDragStart", frame.StartMoving)
   frame:SetScript("OnDragStop", frame.StopMovingOrSizing)
-
-  -- frame:Hide()
+  frame:Hide()
 
   -- Register for chat events
   frame:RegisterEvent("CHAT_MSG_SYSTEM")
@@ -227,3 +228,7 @@ local function Dice_Create(handle)
 end
 
 Dice_Create(HANDLE)
+
+SlashCmdList["DICE"] = function(msg)
+   HANDLE.Frame:Show()
+end 
