@@ -79,7 +79,9 @@ local function Dice_TempDisableButtons(secs)
   end)
 end
 
-local function Dice_UpdateTable(rows)
+local function Dice_UpdateTable()
+  local rows = Dice_SortedRolls()
+
   local scrollFrame = HANDLE.Frame.ScrollFrame
   local scrollChild = scrollFrame.Child
   local w = scrollFrame:GetWidth()
@@ -128,6 +130,11 @@ local function Dice_NextRoll()
   Dice_TempDisableButtons(1)
 end
 
+local function Dice_Clear()
+  HANDLE.rolls = {}
+  Dice_UpdateTable()
+end
+
 local function Dice_Restart()
   Dice_SetLastRoll(INITIAL_ROLL)
   Dice_NextRoll()
@@ -140,10 +147,7 @@ local function Dice_CaptureRoll(name, roll, min, max)
     min=min,
     max=max,
   }
-  
-  local sortedRolls = Dice_SortedRolls()
-
-  Dice_UpdateTable(sortedRolls)
+  Dice_UpdateTable()
 end
 
 local function Dice_ParseChat(msg)
@@ -213,18 +217,23 @@ local function Dice_Create(handle)
   frame.ScrollFrame = scrollFrame
 
   -- Buttons
+  local clearBtn = Dice_CreateButton("Clear", frame)
+  clearBtn:SetPoint("BOTTOMLEFT", 8, 8)
+  clearBtn:SetSize(78, 22)
+  clearBtn:SetScript('OnClick', Dice_Clear)
+
   local restartBtn = Dice_CreateButton("Restart", frame)
-  restartBtn:SetPoint("BOTTOMLEFT", 8, 8)
-  restartBtn:SetSize(115, 22)
+  restartBtn:SetPoint("BOTTOMLEFT", 84, 8)
+  restartBtn:SetSize(77, 22)
   restartBtn:SetScript('OnClick', Dice_Restart)
 
   local rollBtn = Dice_CreateButton("Next Roll", frame)
   rollBtn:SetPoint("BOTTOMRIGHT", -4, 8)
-  rollBtn:SetSize(116, 22)
+  rollBtn:SetSize(77, 22)
   rollBtn:SetScript('OnClick', Dice_NextRoll)
 
   handle.Frame = frame
-  handle.Buttons = {rollBtn, restartBtn}
+  handle.Buttons = {clearBtn, rollBtn, restartBtn}
 end
 
 Dice_Create(HANDLE)
@@ -232,3 +241,6 @@ Dice_Create(HANDLE)
 SlashCmdList["DICE"] = function(msg)
    HANDLE.Frame:Show()
 end 
+
+-- DEBUG
+-- HANDLE.Frame:Show()
