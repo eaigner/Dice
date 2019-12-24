@@ -87,9 +87,17 @@ local function Dice_UpdateTable()
   local textFrames = {}
 
   for k, v in pairs(rows) do
+
+    local color = ""
+
+    -- Set color to red for eliminated players
+    if v.roll <= 1 then
+      color = "|cffff0000"
+    end
+
     local fplayer = FramePool_Get(scrollChild)
     fplayer:SetPoint("TOPLEFT", 4, top)
-    fplayer:SetText(v.name)
+    fplayer:SetText(string.format("%s%s", color, v.name))
     fplayer:Show()
 
     local froll = FramePool_Get(scrollChild)
