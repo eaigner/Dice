@@ -18,14 +18,13 @@ end
 
 local function Dice_UpdateTable(rows)
   local scrollFrame = HANDLE.Frame.ScrollFrame
+  local scrollChild = scrollFrame.Child
   local w = scrollFrame:GetWidth()
   local top = -4
   local rowHeight = 18
 
-  local child = CreateFrame("Frame", nil, scrollFrame)
-
   for k, v in pairs(rows) do
-    local label = child:CreateFontString(nil, "OVERLAY", "GameFontNormal")
+    local label = scrollChild:CreateFontString(nil, "OVERLAY", "GameFontNormal")
     label:SetPoint("TOPLEFT", 4, top)
     label:SetText(v .. ": " .. time())
 
@@ -34,8 +33,7 @@ local function Dice_UpdateTable(rows)
 
   local h = math.abs(top)
 
-  child:SetSize(w, math.abs(top))
-  scrollFrame:SetScrollChild(child)
+  scrollChild:SetSize(w, h)
 end
 
 local function Dice_NextRoll()
@@ -106,6 +104,11 @@ local function Dice_Create(handle)
   scrollFrame:SetPoint("BOTTOMRIGHT", DiceFrameDialogBG, "BOTTOMRIGHT", -22, 22)
   -- scrollFrame:SetClipsChildren(true)
 
+  local scrollChild = CreateFrame("Frame", nil, scrollFrame)
+
+  scrollFrame:SetScrollChild(scrollChild)
+
+  scrollFrame.Child = scrollChild
   frame.ScrollFrame = scrollFrame
 
   -- Buttons
