@@ -3,6 +3,32 @@ local HANDLE = {
   last=5000
 }
 
+local function FramePool_Init(parent)
+  if not parent.FramePool then
+    parent.FramePool = {}
+  end
+end
+
+local function FramePool_All(parent)
+  FramePool_Init(parent)
+  return parent.FramePool
+end
+
+local function FramePool_Put(parent, frame)
+  FramePool_Init(parent)
+  tinsert(parent.FramePool, frame)
+end
+
+local function FramePool_Get(parent)
+  FramePool_Init(parent)
+  local frame = tremove(parent.FramePool)
+  if frame then
+    return frame
+  else
+    return parent:CreateFontString(nil, "OVERLAY", "GameFontNormal")
+  end
+end
+
 local function Dice_SetButtonsEnabled(enabled)
   for k, button in pairs(HANDLE.Buttons) do
     if enabled then button:Enable() else button:Disable() end
@@ -23,12 +49,28 @@ local function Dice_UpdateTable(rows)
   local top = -4
   local rowHeight = 18
 
+  -- Hide all previous row frames
+  for i, frame in pairs(FramePool_All(scrollChild)) do
+    frame:Hide()
+  end
+
+  -- Make new row frames if necessary or reuse from pool
+  local rowFrames = {}
+
   for k, v in pairs(rows) do
-    local label = scrollChild:CreateFontString(nil, "OVERLAY", "GameFontNormal")
-    label:SetPoint("TOPLEFT", 4, top)
-    label:SetText(v .. ": " .. time())
+    local row = FramePool_Get(scrollChild)
+    row:SetPoint("TOPLEFT", 4, top)
+    row:SetText(v .. ": " .. time())
+    row:Show()
+
+    tinsert(rowFrames, row)
 
     top = top - rowHeight
+  end
+
+  -- Put all row frames back in the pool
+  for i, frame in pairs(rowFrames) do
+    FramePool_Put(scrollChild, frame)
   end
 
   local h = math.abs(top)
