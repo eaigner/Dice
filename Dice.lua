@@ -93,12 +93,20 @@ local function Dice_UpdateTable()
     fplayer:Show()
 
     local froll = FramePool_Get(scrollChild)
-    froll:SetPoint("TOPLEFT", w * 0.5, top)
+    froll:SetPoint("TOPLEFT", w * 0.4, top)
     froll:SetText(string.format("%d (%d-%d)", v.roll, v.min, v.max))
     froll:Show()
 
+    local sago = math.floor(time() - v.ts)
+
+    local fts = FramePool_Get(scrollChild)
+    fts:SetPoint("TOPLEFT", w * 0.85, top)
+    fts:SetText(string.format("%ds ago", sago))
+    fts:Show()
+
     tinsert(textFrames, fplayer)
     tinsert(textFrames, froll)
+    tinsert(textFrames, fts)
 
     top = top - rowHeight
   end
@@ -131,6 +139,7 @@ local function Dice_CaptureRoll(name, roll, min, max)
     roll=roll,
     min=min,
     max=max,
+    ts=time()
   }
   Dice_UpdateTable()
 end
@@ -225,6 +234,8 @@ Dice_Create(HANDLE)
 SlashCmdList["DICE"] = function(msg)
    HANDLE.Frame:Show()
 end 
+
+HANDLE.ticker = C_Timer.NewTicker(1, Dice_UpdateTable)
 
 -- DEBUG
 -- HANDLE.Frame:Show()
