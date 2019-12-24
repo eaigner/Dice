@@ -93,8 +93,8 @@ local function Dice_UpdateTable()
     fplayer:Show()
 
     local froll = FramePool_Get(scrollChild)
-    froll:SetPoint("TOPLEFT", w * 0.7, top)
-    froll:SetText(v.roll)
+    froll:SetPoint("TOPLEFT", w * 0.5, top)
+    froll:SetText(string.format("%d (%d-%d)", v.roll, v.min, v.max))
     froll:Show()
 
     tinsert(textFrames, fplayer)
