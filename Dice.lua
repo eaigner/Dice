@@ -184,8 +184,10 @@ local function Dice_CreateButton(text, parent)
 end
 
 local function Dice_Create(handle)
+  local w = 400
+  local h = 300
   local frame = CreateFrame("FRAME", "DiceFrame", UIParent, "UIPanelDialogTemplate")
-  frame:SetSize(240, 300)
+  frame:SetSize(w, h)
   frame:SetPoint("CENTER")
 
   -- Dialog title
@@ -217,19 +219,21 @@ local function Dice_Create(handle)
   frame.ScrollFrame = scrollFrame
 
   -- Buttons
+  local bw = (w - 12) / 3
+  local x = 8
   local clearBtn = Dice_CreateButton("Clear", frame)
-  clearBtn:SetPoint("BOTTOMLEFT", 8, 8)
-  clearBtn:SetSize(78, 22)
+  clearBtn:SetPoint("BOTTOMLEFT", x, 8)
+  clearBtn:SetSize(bw, 22)
   clearBtn:SetScript('OnClick', Dice_Clear)
 
   local restartBtn = Dice_CreateButton("Roll 10k", frame)
-  restartBtn:SetPoint("BOTTOMLEFT", 84, 8)
-  restartBtn:SetSize(77, 22)
+  restartBtn:SetPoint("BOTTOMLEFT", x + bw, 8)
+  restartBtn:SetSize(bw, 22)
   restartBtn:SetScript('OnClick', Dice_Restart)
 
   local rollBtn = Dice_CreateButton("Next Roll", frame)
-  rollBtn:SetPoint("BOTTOMRIGHT", -4, 8)
-  rollBtn:SetSize(77, 22)
+  rollBtn:SetPoint("BOTTOMLEFT", x + 2*bw, 8)
+  rollBtn:SetSize(bw, 22)
   rollBtn:SetScript('OnClick', Dice_NextRoll)
 
   handle.Frame = frame
