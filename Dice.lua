@@ -45,16 +45,6 @@ local function Dice_GetLastRoll()
   end
 end
 
-local function Dice_SetLastRoll(v)
-  local player = UnitName("player")
-  HANDLE.rolls[player] = {
-    name=player,
-    roll=v,
-    min=1,
-    max=v,
-  }
-end
-
 local function Dice_SortedRolls()
   local rolls = {}
   for k, v in pairs(HANDLE.rolls) do
@@ -136,7 +126,8 @@ local function Dice_Clear()
 end
 
 local function Dice_Restart()
-  Dice_SetLastRoll(INITIAL_ROLL)
+  local player = UnitName("player")
+  HANDLE.rolls[player] = nil
   Dice_NextRoll()
 end
 
