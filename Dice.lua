@@ -125,12 +125,6 @@ local function Dice_Clear()
   Dice_UpdateTable()
 end
 
-local function Dice_Restart()
-  local player = UnitName("player")
-  HANDLE.rolls[player] = nil
-  Dice_NextRoll()
-end
-
 local function Dice_CaptureRoll(name, roll, min, max)
   HANDLE.rolls[name] = {
     name=name,
@@ -210,25 +204,20 @@ local function Dice_Create(handle)
   frame.ScrollFrame = scrollFrame
 
   -- Buttons
-  local bw = (w - 12) / 3
+  local bw = (w - 12) / 2
   local x = 8
   local clearBtn = Dice_CreateButton("Clear", frame)
   clearBtn:SetPoint("BOTTOMLEFT", x, 8)
   clearBtn:SetSize(bw, 22)
   clearBtn:SetScript('OnClick', Dice_Clear)
 
-  local restartBtn = Dice_CreateButton("Roll 10k", frame)
-  restartBtn:SetPoint("BOTTOMLEFT", x + bw, 8)
-  restartBtn:SetSize(bw, 22)
-  restartBtn:SetScript('OnClick', Dice_Restart)
-
   local rollBtn = Dice_CreateButton("Next Roll", frame)
-  rollBtn:SetPoint("BOTTOMLEFT", x + 2*bw, 8)
+  rollBtn:SetPoint("BOTTOMLEFT", x + bw, 8)
   rollBtn:SetSize(bw, 22)
   rollBtn:SetScript('OnClick', Dice_NextRoll)
 
   handle.Frame = frame
-  handle.Buttons = {clearBtn, rollBtn, restartBtn}
+  handle.Buttons = {clearBtn, rollBtn}
 end
 
 Dice_Create(HANDLE)
