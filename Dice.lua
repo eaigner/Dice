@@ -34,6 +34,17 @@ local function FramePool_Get(parent)
   end
 end
 
+local function Dice_GetLastRound()
+  local player = UnitName("player")
+  local last = HANDLE.rolls[player]
+
+  if last then
+    return last.round
+  else
+    return 0
+  end
+end
+
 local function Dice_GetLastRoll()
   local player = UnitName("player")
   local last = HANDLE.rolls[player]
@@ -56,17 +67,8 @@ local function Dice_SortedRolls()
   return rolls
 end
 
-local function Dice_SetButtonsEnabled(enabled)
-  for k, button in pairs(HANDLE.Buttons) do
+local function Dice_SetEnabled(button, enabled)
     if enabled then button:Enable() else button:Disable() end
-  end
-end
-
-local function Dice_TempDisableButtons(secs)
-  Dice_SetButtonsEnabled(false)
-  C_Timer.After(0.1, function()
-    Dice_SetButtonsEnabled(true)
-  end)
 end
 
 local function Dice_UpdateTable()
@@ -129,16 +131,32 @@ local function Dice_UpdateTable()
   scrollChild:SetSize(w, h)
 end
 
+local function Dice_CanRoll()
+  local minRound = nil
+
+  for k, v in pairs(HANDLE.rolls) do
+    if minRound then
+      minRound = math.min(minRound, v.round)
+    else
+      minRound = v.round
+    end
+  end
+
+  local myRound = Dice_GetLastRound()
+
+  return myRound <= minRound
+end
+
 local function Dice_NextRoll()
   local lastRoll = Dice_GetLastRoll()
 
   RandomRoll(1, lastRoll)
-  Dice_TempDisableButtons(1)
 end
 
 local function Dice_Clear()
   HANDLE.rolls = {}
   Dice_UpdateTable()
+  Dice_SetEnabled(HANDLE.RollButton, true)
 end
 
 local function Dice_CaptureRoll(name, roll, min, max)
@@ -159,7 +177,9 @@ local function Dice_CaptureRoll(name, roll, min, max)
     ts=time(),
     round=round
   }
+
   Dice_UpdateTable()
+  Dice_SetEnabled(HANDLE.RollButton, Dice_CanRoll())
 end
 
 local function Dice_ParseChat(msg)
@@ -244,7 +264,8 @@ local function Dice_Create(handle)
   rollBtn:SetScript('OnClick', Dice_NextRoll)
 
   handle.Frame = frame
-  handle.Buttons = {clearBtn, rollBtn}
+  handle.ClearButton = clearBtn
+  handle.RollButton = rollBtn
 end
 
 Dice_Create(HANDLE)
