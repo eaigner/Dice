@@ -107,14 +107,14 @@ local function Dice_UpdateTable()
 
     local sago = math.floor(time() - v.ts)
 
-    local fts = FramePool_Get(scrollChild)
-    fts:SetPoint("TOPLEFT", w * 0.85, top)
-    fts:SetText(string.format("%ds ago", sago))
-    fts:Show()
+    local fround = FramePool_Get(scrollChild)
+    fround:SetPoint("TOPLEFT", w * 0.8, top)
+    fround:SetText(string.format("Round %d", v.round))
+    fround:Show()
 
     tinsert(textFrames, fplayer)
     tinsert(textFrames, froll)
-    tinsert(textFrames, fts)
+    tinsert(textFrames, fround)
 
     top = top - rowHeight
   end
@@ -142,12 +142,22 @@ local function Dice_Clear()
 end
 
 local function Dice_CaptureRoll(name, roll, min, max)
+  local prev = HANDLE.rolls[name]
+  local round = 0
+
+  if prev then
+    round = prev.round
+  end
+
+  round = round + 1
+
   HANDLE.rolls[name] = {
     name=name,
     roll=roll,
     min=min,
     max=max,
-    ts=time()
+    ts=time(),
+    round=round
   }
   Dice_UpdateTable()
 end
