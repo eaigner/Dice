@@ -222,7 +222,7 @@ local function Dice_Create(handle)
   clearBtn:SetSize(78, 22)
   clearBtn:SetScript('OnClick', Dice_Clear)
 
-  local restartBtn = Dice_CreateButton("Restart", frame)
+  local restartBtn = Dice_CreateButton("Roll 10k", frame)
   restartBtn:SetPoint("BOTTOMLEFT", 84, 8)
   restartBtn:SetSize(77, 22)
   restartBtn:SetScript('OnClick', Dice_Restart)
