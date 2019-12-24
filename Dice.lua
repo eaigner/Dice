@@ -1,6 +1,9 @@
 
+
+local INITIAL_ROLL = 10000
+
 local HANDLE = {
-  last=5000
+  rolls={}
 }
 
 local function FramePool_Init(parent)
@@ -29,6 +32,38 @@ local function FramePool_Get(parent)
   end
 end
 
+local function Dice_GetLastRoll()
+  local player = UnitName("player")
+  local last = HANDLE.rolls[player]
+
+  if last then
+    return last.roll
+  else
+    return INITIAL_ROLL
+  end
+end
+
+local function Dice_SetLastRoll(v)
+  local player = UnitName("player")
+  HANDLE.rolls[player] = {
+    name=player,
+    roll=v,
+    min=1,
+    max=v,
+  }
+end
+
+local function Dice_SortedRolls()
+  local rolls = {}
+  for k, v in pairs(HANDLE.rolls) do
+    tinsert(rolls, v)
+  end
+  table.sort(rolls, function (left, right)
+      return left.roll > right.roll
+  end)
+  return rolls
+end
+
 local function Dice_SetButtonsEnabled(enabled)
   for k, button in pairs(HANDLE.Buttons) do
     if enabled then button:Enable() else button:Disable() end
@@ -55,21 +90,27 @@ local function Dice_UpdateTable(rows)
   end
 
   -- Make new row frames if necessary or reuse from pool
-  local rowFrames = {}
+  local textFrames = {}
 
   for k, v in pairs(rows) do
-    local row = FramePool_Get(scrollChild)
-    row:SetPoint("TOPLEFT", 4, top)
-    row:SetText(v .. ": " .. time())
-    row:Show()
+    local fplayer = FramePool_Get(scrollChild)
+    fplayer:SetPoint("TOPLEFT", 4, top)
+    fplayer:SetText(v.name)
+    fplayer:Show()
 
-    tinsert(rowFrames, row)
+    local froll = FramePool_Get(scrollChild)
+    froll:SetPoint("TOPLEFT", w * 0.7, top)
+    froll:SetText(v.roll)
+    froll:Show()
+
+    tinsert(textFrames, fplayer)
+    tinsert(textFrames, froll)
 
     top = top - rowHeight
   end
 
   -- Put all row frames back in the pool
-  for i, frame in pairs(rowFrames) do
+  for i, frame in pairs(textFrames) do
     FramePool_Put(scrollChild, frame)
   end
 
@@ -79,29 +120,46 @@ local function Dice_UpdateTable(rows)
 end
 
 local function Dice_NextRoll()
-  RandomRoll(1, HANDLE.last)
+  local lastRoll = Dice_GetLastRoll()
 
-  -- TODO: rm
-  -- Dice_UpdateTable({"A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N", "O", "P", "Q", "R", "S", "T", "X", "Y", "Z"})
-
+  RandomRoll(1, lastRoll)
   Dice_TempDisableButtons(1)
 end
 
 local function Dice_Restart()
-  HANDLE.last = 5000
+  Dice_SetLastRoll(INITIAL_ROLL)
   Dice_NextRoll()
 end
 
 local function Dice_CaptureRoll(name, roll, min, max)
-  HANDLE.last = roll
+  HANDLE.rolls[name] = {
+    name=name,
+    roll=roll,
+    min=min,
+    max=max,
+  }
+  
+  local sortedRolls = Dice_SortedRolls()
+
+  Dice_UpdateTable(sortedRolls)
 end
 
 local function Dice_ParseChat(msg)
   local rx = "^(.+) rolls (%d+) %((%d+)%-(%d+)%)$"
-  local name, roll, min, max = msg:match(rx)
+  local name, sroll, smin, smax = msg:match(rx)
+  local roll = tonumber(sroll)
+  local min = tonumber(smin)
+  local max = tonumber(smax)
 
   if name then
+
     Dice_CaptureRoll(name, roll, min, max)
+
+    -- For testing purposes only
+    -- for i=1,10 do
+    --   local r = math.floor(math.random() * roll)
+    --   Dice_CaptureRoll(name..i, r, min, max)
+    -- end
   end
 end
 
