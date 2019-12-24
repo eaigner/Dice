@@ -74,7 +74,7 @@ end
 
 local function Dice_TempDisableButtons(secs)
   Dice_SetButtonsEnabled(false)
-  C_Timer.After(0.25, function()
+  C_Timer.After(0.1, function()
     Dice_SetButtonsEnabled(true)
   end)
 end
