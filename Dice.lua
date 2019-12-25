@@ -124,6 +124,11 @@ local function Dice_UpdateTable()
 end
 
 local function Dice_CanRoll()
+    -- Don't allow rolling if we already hit 1
+  if Dice_GetLastValue("roll", INITIAL_ROLL) <= 1 then
+    return false
+  end
+
   local minRound = nil
 
   for k, v in pairs(HANDLE.rolls) do
