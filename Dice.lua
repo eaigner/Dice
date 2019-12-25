@@ -278,7 +278,5 @@ SlashCmdList["DICE"] = function(msg)
    HANDLE.Frame:Show()
 end 
 
-HANDLE.ticker = C_Timer.NewTicker(1, Dice_UpdateTable)
-
 -- DEBUG
 -- HANDLE.Frame:Show()
