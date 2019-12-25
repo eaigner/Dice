@@ -34,26 +34,18 @@ local function FramePool_Get(parent)
   end
 end
 
-local function Dice_GetLastRound()
+local function Dice_GetLastValue(key, default)
   local player = UnitName("player")
   local last = HANDLE.rolls[player]
 
   if last then
-    return last.round
-  else
-    return 0
+    local v = last[key]
+    if v then
+      return v
+    end
   end
-end
 
-local function Dice_GetLastRoll()
-  local player = UnitName("player")
-  local last = HANDLE.rolls[player]
-
-  if last then
-    return last.roll
-  else
-    return INITIAL_ROLL
-  end
+  return default
 end
 
 local function Dice_SortedRolls()
@@ -150,13 +142,13 @@ local function Dice_CanRoll()
     return true
   end
 
-  local myRound = Dice_GetLastRound()
+  local myRound = Dice_GetLastValue("round", 0)
 
   return myRound <= minRound
 end
 
 local function Dice_NextRoll()
-  local lastRoll = Dice_GetLastRoll()
+  local lastRoll = Dice_GetLastValue("roll", INITIAL_ROLL)
 
   RandomRoll(1, lastRoll)
 end
