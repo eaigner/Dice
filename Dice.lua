@@ -135,11 +135,19 @@ local function Dice_CanRoll()
   local minRound = nil
 
   for k, v in pairs(HANDLE.rolls) do
-    if minRound then
-      minRound = math.min(minRound, v.round)
-    else
-      minRound = v.round
+    -- Do not include 1 rolls (losers)
+    if v.roll > 1 then
+      if minRound then
+        minRound = math.min(minRound, v.round)
+      else
+        minRound = v.round
+      end
     end
+  end
+
+  -- Always allow rolls if no round started yet
+  if not minRound then
+    return true
   end
 
   local myRound = Dice_GetLastRound()
@@ -194,9 +202,8 @@ local function Dice_ParseChat(msg)
     Dice_CaptureRoll(name, roll, min, max)
 
     -- For testing purposes only
-    -- for i=1,10 do
-    --   local r = math.floor(math.random() * roll)
-    --   Dice_CaptureRoll(name..i, r, min, max)
+    -- for i=1,3 do
+    --   Dice_CaptureRoll(name..i, roll-i, min, max-1)
     -- end
   end
 end
